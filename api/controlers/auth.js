@@ -43,6 +43,7 @@ export const login=async(req,resp,next)=>{
         
          
      } catch (error) {
+        
          next(error)
      }
  }

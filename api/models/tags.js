@@ -2,11 +2,7 @@ import mongoose, { model } from "mongoose";
 
 
 const tagSchema = mongoose.Schema({
-    tag:String,
-    body:{
-        type:String,
-        unique:true
-    },
+    tag:[String],
     noteId:[String],
     userId:String
 },{timestamp:true})

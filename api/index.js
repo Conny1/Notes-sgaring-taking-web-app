@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({extended:false}))
 
 // middleware routers
 app.use("/userAuth", AuthRouter)
-app.use("/userNote", NotesRouter)
+app.use("/userNotes", NotesRouter)
 
 
 // error handling

@@ -8,9 +8,9 @@ const noteSchema = mongoose.Schema({
     },
     body:{
         type:String,
-        unique:true
+        
     },
-    tagId:[String],
+    tags:[String],
     userId:String
 },{timestamps:true})
 
