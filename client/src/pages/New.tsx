@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
 import CreatableSelect from "react-select/creatable";
 import { useNavigate } from "react-router-dom";
@@ -55,8 +55,28 @@ const InputWrapper = styled.div`
   width: 40%;
 `;
 interface Props {}
+interface Tags{
+  label:string,
+
+  value:string
+}
 
 const New = (props: Props) => {
+  
+  const [title, settitle] = useState <HTMLInputElement | string > ("")
+  const [body, setbody] = useState <HTMLTextAreaElement | string> ("")
+  const [tags, settags] = useState <Tags[]> ([])
+
+
+  const addNote=()=>{
+    console.log(title)
+    console.log(body)
+    
+    console.log(tags)
+  }
+
+ 
+  
   const navigate = useNavigate();
   const cancelBtn = () => {
     navigate("/");
@@ -74,20 +94,31 @@ const New = (props: Props) => {
       >
         <InputWrapper>
           <Label>Title</Label>
-          <Input type="text" placeholder="Title" />
+          <Input type="text" placeholder="Title" onChange={(e)=>settitle(e.target.value)} />
         </InputWrapper>
         <InputWrapper>
           <Label>Tags</Label>
-          <CreatableSelect isMulti />
+          <CreatableSelect isMulti 
+        
+          
+          value={tags.map(tag=>{ return { label:tag.label,  value:tag.value } })}
+
+
+          onChange={(tag)=>{
+           settags( 
+            tag.map((item)=> {return { label:item.label , value:item.value}} ))
+          }}
+
+          />
         </InputWrapper>
       </Items>
       <Items>
         <InputWrapper style={{ width: "100%" }}>
           <Label>Body</Label>
-          <TextArea>Note</TextArea>
+          <TextArea onChange={(e)=>setbody(e.target.value)} ></TextArea>
         </InputWrapper>
         <BtnGroup>
-          <Button style={{ color: "#fff", backgroundColor: "#0d6efd" }}>
+          <Button style={{ color: "#fff", backgroundColor: "#0d6efd" }} onClick={addNote} >
             save
           </Button>
           <Button onClick={cancelBtn}>cancel</Button>
