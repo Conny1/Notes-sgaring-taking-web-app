@@ -4,6 +4,7 @@ import New from "./pages/New"
 import Home from "./pages/Home"
 import ReadNote from "./pages/ReadNote"
 import Edit from "./pages/Edit"
+import Auth from "./pages/Auth"
 
 const Container = styled.div`
   width:100%; 
@@ -25,8 +26,7 @@ function App() {
       <Route path="/:id" element={<ReadNote/>} />
       </Route>
       <Route path="/new" element={<New/>} /> 
-      <Route path="/login" element={<h1>login</h1>} /> 
-      <Route path="/signup" element={<h1>signUp</h1>} />   
+      <Route path="/auth" element={<Auth/>} />   
       <Route path="/edit" element={<Edit/>} />     
       
       </Routes>     

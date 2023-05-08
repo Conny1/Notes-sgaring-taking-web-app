@@ -1,7 +1,10 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
 import CreatableSelect from "react-select/creatable";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Note, Notes } from "../states/types";
+import { Tags } from "../states/types";
+import { useUpdateNotesMutation } from "../states/State";
 
 const Container = styled.div`
   width: 90%;
@@ -55,12 +58,38 @@ const InputWrapper = styled.div`
   width: 40%;
 `;
 interface Props {}
-
+// const userId = `643e6ff79dfacbfd301ca8f4`
 const Edit = (props: Props) => {
+  let DataToEdit = useLocation().state
+ 
+  const [title, settitle] = useState < Notes["title"] > ("")
+  const [body, setbody] = useState < Notes["body"] > ("")
+  const [tags, settags] = useState<Array<Tags>> ([])
+const  [ updateNotes,{ isLoading} ]  = useUpdateNotesMutation()
+
+  const  UpdateNote= async ()=>{
+    const data = {
+      userId:DataToEdit.userId,
+    title:title?title:DataToEdit.title,
+    body: body?body:DataToEdit.body,
+    tags: tags.length===0?DataToEdit.tags:tags,
+    noteId:DataToEdit._id
+    }
+    console.log(data)
+  const resp = await updateNotes(data)
+   DataToEdit = resp
+    console.log(DataToEdit)  
+
+  }
+
+
+
+
   const navigate = useNavigate();
   const cancelBtn = () => {
-    navigate("/8");
+    navigate("/");
   };
+  if(isLoading) return<>Loading...</>
   return (
     <Container>
       <H1>Edit Note</H1>
@@ -74,23 +103,34 @@ const Edit = (props: Props) => {
       >
         <InputWrapper>
           <Label>Title</Label>
-          <Input type="text" placeholder="Title" />
+          <Input type="text" placeholder="Title" defaultValue={DataToEdit?.title}  onChange={(e)=>settitle(e.target.value)} />
         </InputWrapper>
         <InputWrapper>
           <Label>Tags</Label>
-          <CreatableSelect isMulti />
+          <CreatableSelect isMulti 
+       
+          defaultValue={DataToEdit?.tags.map((tag:any)=>( { label:tag.label, value:tag.value } ))}
+
+
+          onChange={(tag)=>{
+          
+           settags( 
+            tag.map((tag)=>( { label:tag.label, value:tag.value}) ))
+          }}
+
+          />
         </InputWrapper>
       </Items>
       <Items>
         <InputWrapper style={{ width: "100%" }}>
           <Label>Body</Label>
-          <TextArea>Note</TextArea>
+          <TextArea defaultValue={DataToEdit?.body} onChange={(e)=>setbody(e.target.value)} ></TextArea>
         </InputWrapper>
         <BtnGroup>
-          <Button style={{ color: "#fff", backgroundColor: "#0d6efd" }}>
-            save
+          <Button style={{ color: "#fff", backgroundColor: "#0d6efd" }} onClick={UpdateNote} >
+            Update
           </Button>
-          <Button onClick={cancelBtn} style={{ border:"1px solid  #e43232"}} >cancel</Button>
+          <Button onClick={cancelBtn}>cancel</Button>
         </BtnGroup>
       </Items>
     </Container>

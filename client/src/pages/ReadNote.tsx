@@ -1,6 +1,7 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
+import { useGetOneNoteQuery } from '../states/State';
 
 const Container = styled.div`
   width: 90%;
@@ -30,22 +31,45 @@ const BtnGroup = styled.div`
   width: 100%;
   justify-content: flex-end;
   position:absolute;
-  top:20px;
- 
+  top:20px; 
 `;
 const Notes = styled.div`
+
+`
+const Tags = styled.div`
+display:flex;
+gap:5px;
+margin-top:-2;
+
+`
+const Tag = styled.p`
+background-color:#0d6efd;
+color:#fff;
+padding:2px;
+border-radius:5px;
+
 
 `
 type Props = {}
 
 const ReadNote = (props: Props) => {
     const navigate = useNavigate()
+    const noteId = useLocation().pathname.split("/")[1]
+
+    const {data:noteData, isLoading} = useGetOneNoteQuery(noteId)
+    if(isLoading) return<>Loading...</>
   return (
 
     <Container>
-    <H1>Titel and tags</H1>
+    <H1>{noteData?.title}</H1>
+    <Tags>{
+      noteData?.tags?.map((item, i)=>{
+        return <Tag key={i} >{ item.label } </Tag>
+      })
+      
+      }</Tags>
     <BtnGroup>
-        <Button onClick={()=>navigate("/edit")}  style={{ color: "#fff", backgroundColor: "#0d6efd" }}>
+        <Button onClick={()=>navigate("/edit", {state:noteData})}  style={{ color: "#fff", backgroundColor: "#0d6efd" }}>
           Edit
         </Button>
         <Button style={{ border:"1px solid  #e43232"}}  >Delete</Button>
@@ -53,7 +77,7 @@ const ReadNote = (props: Props) => {
       </BtnGroup>
 
     <Notes>
-   Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ducimus ipsam reiciendis veniam omnis adipisci dolor explicabo nihil labore perspiciatis vero, molestias blanditiis nulla incidunt eaque in, laborum, unde dolore necessitatibus asperiores eius id cumque? Officia pariatur eligendi libero ullam, dicta possimus iste placeat doloremque quo optio voluptatem nam, similique corporis!
+      {noteData?.body}
     </Notes>
    
   </Container>

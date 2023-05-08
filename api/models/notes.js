@@ -10,7 +10,10 @@ const noteSchema = mongoose.Schema({
         type:String,
         
     },
-    tags:[String],
+    tags:[{
+        value:String,
+        label:String
+    }],
     userId:String
 },{timestamps:true})
 

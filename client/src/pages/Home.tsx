@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import CreatableSelect from "react-select/creatable";
 import SharedNotes from '../components/SharedNotes';
 import { useNavigate } from 'react-router-dom';
+import { useGetNotesQuery } from "../states/State";
 
 const Container = styled.div`
   width: 90%;
@@ -66,6 +67,10 @@ type Props = {}
 
 const Home = (props: Props) => {
     const navigate = useNavigate()
+    const {data, isLoading} = useGetNotesQuery() 
+  
+
+  if(isLoading) return <>Loading ....</>
   return (
     <Container>
       <H1>Community shared Notes(0)</H1>
@@ -73,7 +78,12 @@ const Home = (props: Props) => {
           <Button onClick={()=>navigate("/new")}  style={{ color: "#fff", backgroundColor: "#0d6efd" }}>
             Create Notes
           </Button>
-          <Button >Edit tags</Button>
+          <Button
+          onClick={()=> navigate( "/auth")  }
+          >Log in
+          </Button>
+          <Button >Log out
+          </Button>
         </BtnGroup>
       <Items
         style={{
@@ -93,12 +103,14 @@ const Home = (props: Props) => {
         </InputWrapper>
       </Items>
       <Notes>
-        <SharedNotes/>
-        <SharedNotes/>
-        <SharedNotes/>
-        <SharedNotes/>
-        <SharedNotes/>
-        <SharedNotes/>
+        {
+          data?.map((item)=>{
+            return <SharedNotes key={item._id} {...item}  />
+          })
+        
+        }
+       
+        
       </Notes>
      
     </Container>

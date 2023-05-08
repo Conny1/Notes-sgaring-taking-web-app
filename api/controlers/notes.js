@@ -20,12 +20,16 @@ export const UpdateNotes= async (req,resp,next)=>{
     const userid = req.params.id
     const notesId = req.params.notesid 
     const {tags, ...others} = req.body
+    
     try {
-       const updatenotes = await Notes.findByIdAndUpdate(notesId,{ $set:others}, {new:true})
+       let updatenotes = await Notes.findByIdAndUpdate(notesId,{ $set:others}, {new:true})
        if(tags || tags.length > 0){
-        await Notes.findByIdAndUpdate(notesId,{ $set:{tags:tags}})
+         updatenotes = await Notes.findByIdAndUpdate(notesId,{ $set:{tags:tags}}, {new:true})
     }
        if(!updatenotes) return next(createError(500, "DATA NOT FOUND OR UPDATED"))
+       
+      //  console.log(updatenotes)
+    
        resp.status(200).json(updatenotes)
         
     } catch (error) {
@@ -33,7 +37,7 @@ export const UpdateNotes= async (req,resp,next)=>{
     }
 }
 
-
+// get all
 export const getAllNotes= async(req, resp, next)=>{
  try {
     const getAlldata = await Notes.find()
@@ -41,7 +45,7 @@ export const getAllNotes= async(req, resp, next)=>{
     resp.status(200).json(getAlldata)    
  } catch (error) {
     next(error)
- }
+  }
 }
 
 // getOne

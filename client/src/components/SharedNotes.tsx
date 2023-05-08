@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { Notes } from '../states/types'
 
 const Container = styled.div`
 /* width:35%; */
@@ -36,16 +37,23 @@ border-radius:7px;
 type Props = {}
 
 
-const SharedNotes = (props: Props) => {
+const SharedNotes = ({tags, title, _id}:Notes) => {
     const navigate = useNavigate()
 
     const navigateTobody=()=>{{
-        navigate('/8')
+        navigate(`/${_id}`)
     }}
   return (
     <Container onClick={navigateTobody} >
-    <Text>Title</Text>
-    <Items> <Tags>OOO</Tags>  <Tags>OOO</Tags>  <Tags>OOO</Tags>  <Tags>OOO</Tags>  <Tags>OOO</Tags> </Items>
+    <Text>{title}</Text>
+    <Items>
+      {
+        tags?.map((tag,i:number)=>{
+          return <Tags key={i} >{tag.label}</Tags>
+        })
+      }
+      
+       </Items>
     </Container>
   )
 }

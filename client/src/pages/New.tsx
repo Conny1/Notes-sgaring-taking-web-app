@@ -2,6 +2,9 @@ import React,{useState} from "react";
 import styled from "styled-components";
 import CreatableSelect from "react-select/creatable";
 import { useNavigate } from "react-router-dom";
+import { Note, Notes } from "../states/types";
+import { Tags } from "../states/types";
+import { useCreateNotesMutation } from "../states/State";
 
 const Container = styled.div`
   width: 90%;
@@ -55,24 +58,16 @@ const InputWrapper = styled.div`
   width: 40%;
 `;
 interface Props {}
-interface Tags{
-  label:string,
-
-  value:string
-}
-
+const userId = `643e6ff79dfacbfd301ca8f4`
 const New = (props: Props) => {
-  
-  const [title, settitle] = useState <HTMLInputElement | string > ("")
-  const [body, setbody] = useState <HTMLTextAreaElement | string> ("")
-  const [tags, settags] = useState <Tags[]> ([])
+ 
+  const [title, settitle] = useState <HTMLInputElement | Notes["title"] > (``)
+  const [body, setbody] = useState <HTMLTextAreaElement | Notes["body"] > (``)
+  const [tags, settags] = useState<Array<Tags>> ([])
+const  [createNotes]  = useCreateNotesMutation()
 
-
-  const addNote=()=>{
-    console.log(title)
-    console.log(body)
-    
-    console.log(tags)
+  const  addNote= async ()=>{
+  const resp = await createNotes( {userId,title, body,tags  })
   }
 
  
@@ -101,12 +96,12 @@ const New = (props: Props) => {
           <CreatableSelect isMulti 
         
           
-          value={tags.map(tag=>{ return { label:tag.label,  value:tag.value } })}
+          value={tags.map((tag)=>( { label:tag.label, value:tag.value } ))}
 
 
           onChange={(tag)=>{
            settags( 
-            tag.map((item)=> {return { label:item.label , value:item.value}} ))
+            tag.map((tag)=>( { label:tag.label, value:tag.value}) ))
           }}
 
           />
